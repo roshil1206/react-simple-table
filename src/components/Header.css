@@ -1,22 +1,14 @@
-tbody,
-td,
-tfoot,
-th,
-thead,
-tr {
-  border: 0 solid;
-}
-
 .header-column {
   padding: 10px;
   font-size: 1rem;
   font-weight: 500;
   line-height: 1.3rem;
   color: #616161;
+  border-bottom: 1px solid #c6c6c6;
 }
 
 .header-row {
   width: 100%;
-  border-bottom: 1px solid #c6c6c6;
+
   background: #fafafa;
 }
