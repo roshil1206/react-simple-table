@@ -1,0 +1,31 @@
+{
+  "name": "react-simple-table",
+  "version": "1.0.0",
+  "description": "Simple table library for react",
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/esm/index.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "rollup": "rollup -c --bundleConfigAsCjs"
+  },
+  "author": "Roshil Kapatel",
+  "license": "ISC",
+  "devDependencies": {
+    "@rollup/plugin-commonjs": "^24.1.0",
+    "@rollup/plugin-node-resolve": "^15.0.2",
+    "@rollup/plugin-typescript": "^11.1.0",
+    "@types/react": "^18.0.37",
+    "react": "^18.2.0",
+    "rollup": "^3.20.4",
+    "rollup-plugin-dts": "^5.3.0",
+    "rollup-plugin-postcss": "^4.0.2",
+    "typescript": "^5.0.4"
+  },
+  "dependencies": {
+    "tslib": "^2.5.0"
+  }
+}
