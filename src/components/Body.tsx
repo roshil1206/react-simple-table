@@ -10,7 +10,6 @@ export interface BodyProps {
 
 export default function Body(props: BodyProps) {
   const { data, identifiers, pageSize, align } = props;
-  console.log(align);
   return (
     <tbody>
       {data?.map((row, key) => (

@@ -12,19 +12,21 @@ export interface SimpleTableProps {
   pageSize: Number | undefined;
 }
 
-const SimpleTable = (props: SimpleTableProps) => {
-  const { align, columns, data, pageSize } = props;
+const SimpleTable: React.FC<SimpleTableProps> = ({
+  align,
+  columns,
+  data,
+  pageSize,
+}) => {
   const [search, setSearch] = React.useState("");
 
-  // const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearch(e.target.value);
-  // };
-
-  // console.log(search);
+  const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
 
   return (
     <div className="simpleTableContainer">
-      {/* <SearchSection onChange={handleChangeSearch} value={search} /> */}
+      <SearchSection onChange={handleChangeSearch} value={search} />
       <table className="simpleTable-c">
         <Header columns={columns} align={align} />
         <Body
