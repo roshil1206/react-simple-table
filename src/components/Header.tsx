@@ -8,7 +8,7 @@ export interface columnObject {
 
 export interface HeaderProps {
   columns: Array<columnObject>;
-  align: any;
+  align: "left" | "right" | "center" | undefined;
 }
 
 const Header = (props: HeaderProps) => {
