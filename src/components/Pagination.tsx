@@ -1,5 +1,6 @@
 import React from "react";
 import { PagninationType } from "./SimpleTable";
+import "./Pagination.css";
 
 interface getPageType {
   pageno: number | string;
@@ -18,89 +19,131 @@ const Pagination: React.FC<PaginationProps> = ({
   pagination,
 }) => {
   const getPages = (): Array<getPageType> => {
-    if (pagination.page === 1) {
-      if (lastPage > 5) {
-        return [
-          { pageno: 1, clickable: true },
-          { pageno: 2, clickable: true },
-          { pageno: 3, clickable: true },
-          { pageno: "...", clickable: false },
-          { pageno: lastPage, clickable: true },
-        ];
-      } else if (lastPage <= 5) {
-        return Array.from({ length: lastPage }, (v: any, k: number) => ({
-          pageno: k + 1,
-          clickable: true,
-        }));
-      }
-    } else if (pagination.page === 2) {
-      if (lastPage > 5) {
-        return [
-          { pageno: 1, clickable: true },
-          { pageno: 2, clickable: true },
-          { pageno: 3, clickable: true },
-          { pageno: "...", clickable: false },
-          { pageno: lastPage, clickable: true },
-        ];
-      } else if (lastPage <= 5) {
-        return Array.from({ length: lastPage }, (v: any, k: number) => ({
-          pageno: k + 1,
-          clickable: true,
-        }));
-      }
-    } else if (pagination.page === 3) {
-      if (lastPage > 5) {
-        return [
-          { pageno: 1, clickable: true },
-          { pageno: 2, clickable: true },
-          { pageno: 3, clickable: true },
-          { pageno: "...", clickable: false },
-          { pageno: lastPage, clickable: true },
-        ];
-      } else if (lastPage <= 5) {
-        return Array.from({ length: lastPage }, (v: any, k: number) => ({
-          pageno: k + 1,
-          clickable: true,
-        }));
-      }
-    } else if (pagination.page === lastPage) {
-      if (lastPage > 5) {
-        return [
-          { pageno: 1, clickable: true },
-          { pageno: "...", clickable: false },
-          { pageno: lastPage - 2, clickable: true },
-          { pageno: lastPage - 1, clickable: true },
-          { pageno: lastPage, clickable: true },
-        ];
-      } else {
-        return Array.from({ length: lastPage }, (v: any, k: number) => ({
-          pageno: k + 1,
-          clickable: true,
-        }));
-      }
-    } else if (pagination.page === lastPage - 1) {
-      if (lastPage > 5) {
-        return [
-          { pageno: 1, clickable: true },
-          { pageno: "...", clickable: false },
-          { pageno: lastPage - 2, clickable: true },
-          { pageno: lastPage - 1, clickable: true },
-          { pageno: lastPage, clickable: true },
-        ];
-      } else {
-        return Array.from({ length: lastPage }, (v, k) => ({
-          pageno: k + 1,
-          clickable: true,
-        }));
-      }
-    }
-    return [
+    const paginationArray: Array<getPageType> = [
       { pageno: 1, clickable: true },
-      { pageno: "...", clickable: false },
-      { pageno: pagination.page, clickable: true },
-      { pageno: "...", clickable: false },
-      { pageno: lastPage, clickable: true },
     ];
+
+    const addTillLastPage = (): void => {
+      for (let i = 2; i <= lastPage; i++) {
+        paginationArray.push({ pageno: i, clickable: true });
+      }
+    };
+
+    const pushTwoBefore = (currentPage: number): void => {
+      paginationArray.push({ pageno: currentPage - 2, clickable: true });
+      paginationArray.push({ pageno: currentPage - 1, clickable: true });
+    };
+
+    const pushTwoAfter = (
+      currentPage: number,
+      includeCurrent: boolean
+    ): void => {
+      if (includeCurrent) {
+        paginationArray.push({ pageno: currentPage, clickable: true });
+      }
+      paginationArray.push({ pageno: currentPage + 1, clickable: true });
+      paginationArray.push({ pageno: currentPage + 2, clickable: true });
+    };
+
+    const pushDots = (): void => {
+      paginationArray.push({ pageno: "...", clickable: false });
+    };
+
+    const pushEnd = (): void => {
+      paginationArray.push({ pageno: lastPage, clickable: true });
+    };
+
+    switch (pagination.page) {
+      case 1:
+        if (lastPage > 5) {
+          pushTwoAfter(pagination.page, false);
+          pushDots();
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+      case 2:
+        if (lastPage > 6) {
+          pushTwoAfter(pagination.page, true);
+          pushDots();
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+      case 3:
+        if (lastPage > 7) {
+          paginationArray.push({ pageno: 2, clickable: true });
+          pushTwoAfter(pagination.page, true);
+          pushDots();
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+
+      case 4:
+        if (lastPage > 8) {
+          pushTwoBefore(pagination.page);
+          pushTwoAfter(pagination.page, true);
+          pushDots();
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+
+      case lastPage - 3:
+        if (lastPage > 7) {
+          pushDots();
+          pushTwoBefore(pagination.page);
+          pushTwoAfter(pagination.page, true);
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+
+      case lastPage - 2:
+        if (lastPage > 7) {
+          pushDots();
+          pushTwoBefore(pagination.page);
+          pushTwoAfter(pagination.page, true);
+        } else {
+          addTillLastPage();
+        }
+        break;
+      case lastPage - 1:
+        if (lastPage > 6) {
+          pushDots();
+          pushTwoBefore(pagination.page);
+          paginationArray.push({ pageno: pagination.page, clickable: true });
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+      case lastPage:
+        if (lastPage > 5) {
+          pushDots();
+          pushTwoBefore(pagination.page);
+          pushEnd();
+        } else {
+          addTillLastPage();
+        }
+        break;
+
+      default:
+        pushDots();
+        pushTwoBefore(pagination.page);
+        pushTwoAfter(pagination.page, true);
+        pushDots();
+        pushEnd();
+        break;
+    }
+
+    return paginationArray;
   };
 
   return (
@@ -108,25 +151,44 @@ const Pagination: React.FC<PaginationProps> = ({
       <button
         disabled={!pagination.preBtn}
         onClick={() => handlePageChange(pagination.page - 1)}
+        className="paginationButton"
       >
-        back
+        Back
       </button>
       {getPages().map((page: any, index: number) => (
         <div key={index}>
           {page.clickable ? (
-            <button onClick={() => handlePageChange(page.pageno)}>
+            <button
+              onClick={() => handlePageChange(page.pageno)}
+              className={`paginationButton ${
+                pagination.page === page.pageno ? "active" : ""
+              }`}
+            >
               {page.pageno}
             </button>
           ) : (
-            <div>{page.pageno}</div>
+            <div
+              style={{ height: "100%", display: "flex", alignItems: "center" }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  marginLeft: "0.3rem",
+                  marginRight: "0.3rem",
+                }}
+              >
+                {page.pageno}
+              </p>
+            </div>
           )}
         </div>
       ))}
       <button
         disabled={!pagination.nextBtn}
         onClick={() => handlePageChange(pagination.page + 1)}
+        className="paginationButton"
       >
-        next
+        Next
       </button>
     </div>
   );
