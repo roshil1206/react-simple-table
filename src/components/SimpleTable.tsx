@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import "./SimpleTable.css";
 import Header, { columnObject } from "./Header";
 import Body from "./Body";
@@ -12,6 +12,8 @@ export interface SimpleTableProps {
   // data: Array<Object> | undefined;
   data: Array<Object>;
   pageSize: number | undefined;
+  showSearchFilterDropDown: boolean | undefined;
+  searchable: boolean | undefined;
 }
 
 export interface PagninationType {
@@ -27,6 +29,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   columns,
   data,
   pageSize,
+  searchable,
 }) => {
   const [search, setSearch] = React.useState("");
   const [pagination, setPagination] = React.useState({
@@ -61,13 +64,34 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
     setSearch(e.target.value);
   };
 
+  const getData: Array<Object> = useMemo(() => {
+    const identifiers = columns
+      .filter((column) => column?.searchable)
+      .map((column) => column.identifier);
+
+    return data.filter((d: Object) => {
+      return identifiers.some((identifier: string) => {
+        if (
+          d[identifier as keyof Object]
+            .toString()
+            .toLowerCase()
+            .includes(search.toLowerCase())
+        ) {
+          return true;
+        }
+      });
+    });
+  }, [data, search]);
+
   return (
     <div className="simpleTableContainer">
-      <SearchSection onChange={handleChangeSearch} value={search} />
+      {searchable && (
+        <SearchSection onChange={handleChangeSearch} value={search} />
+      )}
       <table className="simpleTable-c">
         <Header columns={columns} align={align} />
         <Body
-          data={data}
+          data={getData}
           identifiers={columns.map((column) => column.identifier)}
           pageSize={pageSize || preDefinedPageSize}
           align={align}
@@ -75,7 +99,7 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
         />
       </table>
       <Pagination
-        lastPage={Math.ceil(data.length / (pageSize || preDefinedPageSize))}
+        lastPage={Math.ceil(getData.length / (pageSize || preDefinedPageSize))}
         pagination={pagination}
         handlePageChange={handlePageChange}
       />

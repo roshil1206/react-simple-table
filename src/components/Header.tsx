@@ -4,6 +4,7 @@ import "./Header.css";
 export interface columnObject {
   name: String;
   identifier: string;
+  searchable: boolean | undefined;
 }
 
 export interface HeaderProps {
