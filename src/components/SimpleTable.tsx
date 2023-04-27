@@ -30,8 +30,10 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   data,
   pageSize,
   searchable,
+  showSearchFilterDropDown,
 }) => {
   const [search, setSearch] = React.useState("");
+  const [filterOptionSelected, setFilterOptionSelected] = React.useState("");
   const [pagination, setPagination] = React.useState({
     nextBtn:
       Math.ceil(data?.length / (pageSize || preDefinedPageSize)) === 1
@@ -65,9 +67,11 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   };
 
   const getData: Array<Object> = useMemo(() => {
-    const identifiers = columns
-      .filter((column) => column?.searchable)
-      .map((column) => column.identifier);
+    const identifiers = showSearchFilterDropDown
+      ? [filterOptionSelected]
+      : columns
+          .filter((column) => column?.searchable)
+          .map((column) => column.identifier);
 
     return data.filter((d: Object) => {
       return identifiers.some((identifier: string) => {
@@ -86,7 +90,16 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
   return (
     <div className="simpleTableContainer">
       {searchable && (
-        <SearchSection onChange={handleChangeSearch} value={search} />
+        <SearchSection
+          onChange={handleChangeSearch}
+          value={search}
+          showSearchFilterDropDown={showSearchFilterDropDown}
+          filterOption={filterOptionSelected}
+          searchColumns={columns.filter((data) => data?.searchable)}
+          selectFilterOption={(option: string) =>
+            setFilterOptionSelected(option)
+          }
+        />
       )}
       <table className="simpleTable-c">
         <Header columns={columns} align={align} />
