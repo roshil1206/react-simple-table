@@ -68,23 +68,27 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
 
   const getData: Array<Object> = useMemo(() => {
     const identifiers = showSearchFilterDropDown
-      ? [filterOptionSelected]
+      ? filterOptionSelected
+        ? [filterOptionSelected]
+        : []
       : columns
           .filter((column) => column?.searchable)
           .map((column) => column.identifier);
-
-    return data.filter((d: Object) => {
-      return identifiers.some((identifier: string) => {
-        if (
-          d[identifier as keyof Object]
-            .toString()
-            .toLowerCase()
-            .includes(search.toLowerCase())
-        ) {
-          return true;
-        }
+    if (identifiers.length > 0)
+      return data.filter((d: Object) => {
+        return identifiers.some((identifier: string) => {
+          if (
+            d[identifier as keyof Object]
+              .toString()
+              .toLowerCase()
+              .includes(search.toLowerCase())
+          ) {
+            return true;
+          }
+        });
       });
-    });
+
+    return data;
   }, [data, search]);
 
   return (
