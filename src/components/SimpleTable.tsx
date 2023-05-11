@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import "./SimpleTable.css";
 import Header, { columnObject } from "./Header";
 import Body from "./Body";
@@ -90,6 +90,16 @@ const SimpleTable: React.FC<SimpleTableProps> = ({
 
     return data;
   }, [data, search]);
+
+  useEffect(() => {
+    if (Math.ceil(getData?.length / (pageSize || preDefinedPageSize)) === 1) {
+      setPagination({
+        nextBtn: false,
+        preBtn: false,
+        page: 1,
+      });
+    }
+  }, [getData]);
 
   return (
     <div className="simpleTableContainer">
